@@ -1,0 +1,6 @@
+*/build
+*.log
+*.dll
+illuminasExamples
+.gradle
+.idea

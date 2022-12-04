@@ -1,0 +1,5 @@
+vec3 decodeWorldPosition(in mat4 mvpInverse,in float depth, in vec2 uv){
+    vec4 pos = vec4(uv, depth, 1.0)*2.0-1.0;
+    pos = mvpInverse * pos;
+    return pos.xyz / pos.w;
+}

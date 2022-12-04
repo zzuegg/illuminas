@@ -1,0 +1,11 @@
+group 'tech.diis'
+version '0.0.0-SNAPSHOT'
+
+
+subprojects {
+    repositories {
+        mavenLocal()
+        mavenCentral()
+
+    }
+}

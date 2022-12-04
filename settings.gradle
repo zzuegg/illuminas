@@ -1,0 +1,5 @@
+rootProject.name = 'Illuminas'
+include "illuminas"
+project (':illuminas').projectDir=file('illuminas')
+include "illuminasExamples"
+project (':illuminasExamples').projectDir=file('illuminasExamples')

@@ -1,0 +1,13 @@
+MaterialDef GBufferDebugPhong {
+    MaterialParameters{
+        Texture2D CurrentResult;
+        Texture2D AlbedoSpecular;
+        Texture2D NormalDepth -LINEAR;
+        Texture2D Depth;
+    }
+
+    Technique{
+        VertexShader GLSL150: Shaders/Illuminas/Common/FullScreenQuad.vert
+        FragmentShader GLSL150: Shaders/debug/GBufferDebugPhong.frag
+    }
+}

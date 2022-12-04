@@ -1,0 +1,10 @@
+plugins {
+    id 'java'
+}
+
+dependencies {
+    implementation libs.lombok
+    annotationProcessor libs.lombok
+    implementation libs.logging.api
+    implementation libs.jme3.core
+}

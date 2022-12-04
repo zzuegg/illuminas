@@ -1,0 +1,21 @@
+[versions]
+jme3 = "3.6.0-SNAPSHOT"
+slf4j = "2.0.3"
+logback = "1.4.4"
+lombok = "1.18.24"
+
+[libraries]
+jme3-core = { module = "org.jmonkeyengine:jme3-core", version.ref = "jme3" }
+jme3-plugins = { module = "org.jmonkeyengine:jme3-plugins", version.ref = "jme3" }
+jme3-desktop = { module = "org.jmonkeyengine:jme3-desktop", version.ref = "jme3" }
+jme3-renderer = { module = "org.jmonkeyengine:jme3-lwjgl", version.ref = "jme3" }
+jme3-testdata = { module = "org.jmonkeyengine:jme3-testdata", version.ref = "jme3" }
+lombok = { module = "org.projectlombok:lombok", version.ref = "lombok" }
+logging-api = { module = "org.slf4j:slf4j-api", version.ref = "slf4j" }
+logging-runtime = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
+
+
+[bundles]
+jme3-runtime = ["jme3-plugins", "jme3-desktop", "jme3-renderer"]
+
+

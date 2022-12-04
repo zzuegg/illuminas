@@ -1,0 +1,14 @@
+MaterialDef RenderVSM {
+    MaterialParameters{
+
+    }
+
+    Technique{
+        VertexShader GLSL150: Shaders/Illuminas/Shadow/RenderShadow.vert
+        FragmentShader GLSL150: Shaders/Illuminas/Shadow/RenderVSM.frag
+        WorldParameters {
+            WorldViewProjectionMatrix
+            WorldMatrix
+        }
+    }
+}

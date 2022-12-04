@@ -1,0 +1,14 @@
+MaterialDef GBufferDebugPhong {
+    MaterialParameters{
+        Texture2D CurrentResult;
+        Vector2 Direction;
+    }
+
+    Technique{
+        VertexShader GLSL150: Shaders/Illuminas/Common/FullScreenQuad.vert
+        FragmentShader GLSL150: Shaders/Illuminas/Common/GaussianBlur.frag
+        WorldParameters {
+            Resolution
+        }
+    }
+}

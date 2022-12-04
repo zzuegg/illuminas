@@ -1,0 +1,41 @@
+#if defined (SHADOW)
+
+uniform sampler2D m_ShadowMap;
+
+
+#if (SHADOWMODE == 1)
+
+
+uniform mat4 m_ShadowViewProjectionMatrix;
+
+float linstep(float mi, float ma, float v){
+    return clamp ((v - mi)/(ma - mi), 0, 1);
+}
+
+float ReduceLightBleeding(float p_max, float Amount){
+     return linstep(Amount, 1, p_max);
+}
+
+float chebyshevUpperBound(vec2 moments, float distance){
+		if (distance <= moments.x)
+			return 1.0 ;
+
+		float variance = moments.y - (moments.x*moments.x);
+		variance = max(variance,0.00002);
+		float d = distance - moments.x;
+		float p_max = variance / (variance + d*d);
+		return ReduceLightBleeding(p_max,1.0);
+}
+
+float calculateShadow(in vec3 worldPos,in vec3 lightDirection,float distance){
+        vec2 moments;
+        vec4 shadowCoordinates=(m_ShadowViewProjectionMatrix*vec4(worldPos,1.0));
+        shadowCoordinates = vec4(((shadowCoordinates.xyz/shadowCoordinates.w)+1.0)/2.0,shadowCoordinates.w);
+        moments = texture2D(m_ShadowMap,shadowCoordinates.xy).xy;
+        return chebyshevUpperBound(moments,shadowCoordinates.z);
+        //return chebyshevUpperBound(shadowCoordinates.z,moments);
+}
+#endif
+
+#endif
+

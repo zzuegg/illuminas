@@ -1,0 +1,78 @@
+MaterialDef BlinnPhongLightVolumes {
+    MaterialParameters{
+        Texture2D AlbedoSpecular;
+        Texture2D NormalDepth -LINEAR;
+        Texture2D Depth -LINEAR;
+        Vector4 AmbientLight;
+        Vector3Array LightDirections;
+        Vector3Array LightPositions;
+        Vector3Array LightColors;
+        Vector2Array LightAngles;
+        FloatArray LightRadii;
+        Float LightAngularFallofFactor;
+        Int Lights : 0;
+
+        Int ShadowMode;
+        Texture2D ShadowMap -LINEAR;
+        TextureCubeMap ShadowCubeMap -LINEAR;
+        Matrix4 ShadowViewProjectionMatrix;
+    }
+
+    Technique AmbientDirectionalLightVolumes{
+        VertexShader GLSL150: Shaders/Illuminas/Common/FullScreenQuad.vert
+        FragmentShader GLSL150: Shaders/Illuminas/BlinnPhong/BlinnPhongAmbientDirectionalLightVolumes.frag
+        WorldParameters {
+            CameraPosition
+            ViewProjectionMatrixInverse
+        }
+        Defines{
+            LIGHTS : Lights
+        }
+    }
+
+    Technique PointLightVolumes{
+        VertexShader GLSL150: Shaders/Illuminas/BlinnPhong/BlinnPhongPointLightVolume.vert
+        FragmentShader GLSL150: Shaders/Illuminas/BlinnPhong/BlinnPhongPointLightVolume.frag
+        WorldParameters {
+            CameraPosition
+            Resolution
+            WorldViewProjectionMatrix
+            ViewProjectionMatrix
+            ViewProjectionMatrixInverse
+        }
+        Defines{
+            LIGHTS : Lights
+        }
+    }
+
+    Technique SpotLightVolumes{
+        VertexShader GLSL150: Shaders/Illuminas/BlinnPhong/BlinnPhongSpotLightVolume.vert
+        FragmentShader GLSL150: Shaders/Illuminas/BlinnPhong/BlinnPhongSpotLightVolume.frag
+        WorldParameters {
+            CameraPosition
+            Resolution
+            WorldViewProjectionMatrix
+            ViewProjectionMatrix
+            ViewProjectionMatrixInverse
+        }
+        Defines{
+            LIGHTS : Lights
+            SHADOW : ShadowMap
+            SHADOWMODE : ShadowMode
+        }
+    }
+
+
+
+    Technique{
+        VertexShader GLSL150: Shaders/FSQuad.vert
+        FragmentShader GLSL150: Shaders/lights/PhongDirectionalAmbient.frag
+        WorldParameters {
+            CameraPosition
+            ViewProjectionMatrixInverse
+        }
+        Defines{
+            LIGHTS : Lights
+        }
+    }
+}

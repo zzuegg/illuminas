@@ -1,0 +1,42 @@
+MaterialDef PhongDeferred {
+    MaterialParameters{
+        Texture2D AlbedoMap;
+        Texture2D SpecularMap -LINEAR;
+        Texture2D NormalMap -LINEAR;
+    }
+
+    Technique{
+        VertexShader GLSL150: Shaders/Illuminas/Common/Model.vert
+        FragmentShader GLSL150: Shaders/Illuminas/BlinnPhong/ForwardBlinnPhong.frag
+
+                WorldParameters {
+                    WorldMatrix
+                    NormalMatrix
+                    WorldViewProjectionMatrix
+                    WorldMatrixInverseTranspose
+                    WorldNormalMatrix
+                }
+    }
+
+        Technique IlluminasDeferred{
+            VertexShader GLSL150: Shaders/Illuminas/Common/Model.vert
+            FragmentShader GLSL150: Shaders/Illuminas/BlinnPhong/DeferredBlinnPhong.frag
+
+                    WorldParameters {
+                        WorldMatrix
+                        NormalMatrix
+                        WorldViewProjectionMatrix
+                        WorldMatrixInverseTranspose
+                        WorldNormalMatrix
+                    }
+        }
+
+        Technique ShadowVSM{
+                VertexShader GLSL150: Shaders/Illuminas/Shadow/RenderShadow.vert
+                FragmentShader GLSL150: Shaders/Illuminas/Shadow/RenderVSM.frag
+                WorldParameters {
+                    WorldViewProjectionMatrix
+                    WorldMatrix
+                }
+        }
+}
