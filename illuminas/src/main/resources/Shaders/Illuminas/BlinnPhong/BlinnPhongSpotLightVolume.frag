@@ -56,10 +56,6 @@ void main(){
             if(shadowCoordinates.w<0){
                 angularFallOf=0;
             }
-            //if(distance(lightPosition,worldPosition+lightDirection)<distance(lightPosition,worldPosition)){
-            //    angularFallOf=0;
-                //fragColor=vec4(shadowCoordinates.xy,0,1);
-            //}
         }
     #endif
 

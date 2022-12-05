@@ -1,3 +1,4 @@
+#import "Shaders/Illuminas/ShaderLib/HWSkinning.glsllib"
 uniform mat4 g_WorldViewProjectionMatrix;
 uniform mat3 g_WorldNormalMatrix;
 uniform mat3 g_WorldMatrix;
@@ -13,9 +14,14 @@ out vec4 wTangent;
 out vec3 wPosition;
 
 void main(){
-    gl_Position = g_WorldViewProjectionMatrix * vec4(inPosition, 1.0);
-    wPosition = g_WorldMatrix*inPosition;
-    wNormal = (g_WorldNormalMatrix * inNormal).xyz;
+    vec4 modelSpacePos=vec4(inPosition,1.0);
+    vec3 modelSpaceNorm=inNormal;
+    #ifdef NUM_BONES
+    Skinning_Compute(modelSpacePos, modelSpaceNorm);
+    #endif
+    gl_Position = g_WorldViewProjectionMatrix * modelSpacePos;
+    wPosition = g_WorldMatrix*modelSpacePos.xyz;
+    wNormal = (g_WorldNormalMatrix * modelSpaceNorm).xyz;
     wTangent = vec4(g_WorldNormalMatrix * inTangent.xyz, inTangent.w);
     texCoord=inTexCoord;
 }

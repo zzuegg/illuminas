@@ -3,6 +3,10 @@ MaterialDef PhongDeferred {
         Texture2D AlbedoMap;
         Texture2D SpecularMap -LINEAR;
         Texture2D NormalMap -LINEAR;
+
+        // For hardware skinning
+        Int NumberOfBones
+        Matrix4Array BoneMatrices
     }
 
     Technique{
@@ -29,6 +33,10 @@ MaterialDef PhongDeferred {
                         WorldMatrixInverseTranspose
                         WorldNormalMatrix
                     }
+
+                    Defines{
+                        NUM_BONES : NumberOfBones
+                    }
         }
 
         Technique ShadowVSM{
@@ -37,6 +45,10 @@ MaterialDef PhongDeferred {
                 WorldParameters {
                     WorldViewProjectionMatrix
                     WorldMatrix
+                }
+
+                Defines{
+                    NUM_BONES : NumberOfBones
                 }
         }
 }
