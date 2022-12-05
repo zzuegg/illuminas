@@ -62,6 +62,26 @@ MaterialDef BlinnPhongLightVolumes {
         }
     }
 
+        Technique SpotLightVolumetric{
+            VertexShader GLSL400: Shaders/Illuminas/BlinnPhong/BlinnPhongSpotLightVolumetric.vert
+            TessellationEvaluationShader GLSL400: Shaders/Illuminas/BlinnPhong/BlinnPhongSpotLightVolumetric.tseval
+            TessellationControlShader GLSL400: Shaders/Illuminas/BlinnPhong/BlinnPhongSpotLightVolumetric.tsctrl
+            FragmentShader GLSL400: Shaders/Illuminas/BlinnPhong/BlinnPhongSpotLightVolumetric.frag
+            WorldParameters {
+                CameraPosition
+                Resolution
+                WorldMatrix
+                WorldViewProjectionMatrix
+                ViewProjectionMatrix
+                ViewProjectionMatrixInverse
+            }
+            Defines{
+                LIGHTS : Lights
+                SHADOW : ShadowMap
+                SHADOWMODE : ShadowMode
+            }
+        }
+
 
 
     Technique{

@@ -79,6 +79,7 @@ public class GeometryBasedShadows extends RenderTask {
                 if (pointLight instanceof ExtendedPointLight) {
                     ExtendedSpotLight spotLight = new ExtendedSpotLight();
                     spotLight.setShadowCasting(true);
+                    spotLight.setCastingVolumetric(((ExtendedPointLight) pointLight).isCastingVolumetric());
                     spotLight.setShadowMode(((ExtendedPointLight) pointLight).getShadowMode());
                     spotLight.setShadowMapSize(((ExtendedPointLight) pointLight).getShadowMapSize());
                     spotLight.setPosition(pointLight.getPosition());

@@ -17,4 +17,8 @@ public class ExtendedSpotLight extends SpotLight {
     @Getter
     @Setter
     int shadowMapSize;
+
+    @Getter
+    @Setter
+    boolean castingVolumetric;
 }

@@ -17,4 +17,8 @@ public class ExtendedPointLight extends PointLight {
     @Getter
     @Setter
     int shadowMapSize;
+
+    @Getter
+    @Setter
+    boolean castingVolumetric;
 }

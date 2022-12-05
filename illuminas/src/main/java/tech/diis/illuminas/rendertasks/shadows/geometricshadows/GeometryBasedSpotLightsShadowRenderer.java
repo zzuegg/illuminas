@@ -6,6 +6,7 @@ import com.jme3.material.RenderState;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.Camera;
+import com.jme3.scene.Mesh;
 import com.jme3.texture.Texture;
 import tech.diis.illuminas.Constants;
 import tech.diis.illuminas.PipelineContext;
@@ -40,6 +41,20 @@ public class GeometryBasedSpotLightsShadowRenderer extends GeometryBasedSpotLigh
             renderPipeline.getRenderManager().setCamera(renderPipeline.getCamera(), false);
             Constants.OutputTarget.bind(renderPipeline);
             super.renderSpotLights(renderPipeline, spotLight, count, lightPositions, lightDirections, lightColors, lightAngles, lightRadii, angularFallOfFactor);
+            if(extendedSpotLight.isCastingVolumetric()){
+                renderPipeline.getRenderManager().setForcedTechnique("SpotLightVolumetric");
+                renderState.setFaceCullMode(RenderState.FaceCullMode.Off);
+                renderState.setDepthTest(false);
+                geometry.getMesh().setPatchVertexCount(3);
+                geometry.getMesh().setMode(Mesh.Mode.Patch);
+                renderState.setWireframe(false);
+                //renderState.setDepthFunc(RenderState.TestFunction.Less);
+                super.renderSpotLights(renderPipeline, spotLight, count, lightPositions, lightDirections, lightColors, lightAngles, lightRadii, angularFallOfFactor);
+                //renderState.setDepthFunc(RenderState.TestFunction.GreaterOrEqual);
+                renderState.setWireframe(false);
+                geometry.getMesh().setMode(Mesh.Mode.Triangles);
+                renderState.setFaceCullMode(RenderState.FaceCullMode.Front);
+            }
         }
     }
 }
