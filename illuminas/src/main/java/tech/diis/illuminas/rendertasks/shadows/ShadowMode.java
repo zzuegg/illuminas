@@ -35,7 +35,7 @@ public class ShadowMode {
                 .addRenderTask(new RenderShadowMap("ShadowVSM"));
 
         VSM_GF = new ShadowMode();
-        VSM.shadowMode=1;
+        VSM_GF.shadowMode=1;
         VSM_GF.shadowMapTexture = VSM.shadowMapTexture;
         VSM_GF.renderPipeline = new RenderPipeline("VMS-GF-Pipeline", VSM.shadowMapTexture, Constants.Depth);
         VSM_GF.renderPipeline.addRenderTask(new CollectShadowData(true))
