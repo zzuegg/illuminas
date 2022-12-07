@@ -1,0 +1,16 @@
+
+#if (LIGHT_MODE == 1)
+#import "Shaders/Illuminas/ShaderLib/BlinnPhong.glsllib"
+#endif
+
+
+float computeLinearFallOf(float radius, float distance){
+    float attenuation=max(radius-distance, 0)/radius;
+    return pow(clamp(attenuation, 0.0, 1.0), 2.0);
+}
+
+float computeAngularFallOf(float currAngleCos,float angleOuter,float angleInner){
+    float outerAngleCos = cos(angleOuter);
+    float innerAngleCos = cos(angleInner);
+    return clamp((currAngleCos-outerAngleCos)/(innerAngleCos-outerAngleCos), 0.0, 1.0);
+}

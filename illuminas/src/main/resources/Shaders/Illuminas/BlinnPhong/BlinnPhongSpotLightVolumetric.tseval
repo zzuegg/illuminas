@@ -1,5 +1,5 @@
 #import "Shaders/Illuminas/ShaderLib/GBuffer.glsllib"
-#import "Shaders/Illuminas/ShaderLib/BlinnPhong.glsllib"
+#import "Shaders/Illuminas/ShaderLib/Lighting.glsllib"
 layout (triangles, equal_spacing, cw) in;
 uniform mat3 g_WorldMatrix;
 uniform mat4 g_ViewProjectionMatrix;

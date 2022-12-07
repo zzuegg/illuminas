@@ -1,5 +1,5 @@
 #extension GL_ARB_separate_shader_objects : enable
-#import "Shaders/Illuminas/ShaderLib/BlinnPhong.glsllib"
+#import "Shaders/Illuminas/ShaderLib/Lighting.glsllib"
 #import "Shaders/Illuminas/ShaderLib/GBuffer.glsllib"
 uniform mat4 g_ViewProjectionMatrixInverse;
 uniform vec3 g_CameraPosition;
@@ -11,10 +11,6 @@ uniform vec4 m_AmbientLight;
 uniform vec3[LIGHTS] m_LightDirections;
 uniform vec3[LIGHTS] m_LightColors;
 uniform int m_Lights;
-
-uniform sampler2D m_NormalDepth;
-uniform sampler2D m_Depth;
-uniform sampler2D m_AlbedoSpecular;
 
 layout (location = 0) out vec4 fragColor;
 

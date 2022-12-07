@@ -1,3 +1,7 @@
+uniform sampler2D m_NormalDepth;
+uniform sampler2D m_AlbedoSpecular;
+uniform sampler2D m_Depth;
+
 const float kPi = 3.14159265;
 const float kShininess = 16.0;
 const float kEnergyConservation = ( 8.0 + kShininess ) / ( 8.0 * kPi );
@@ -7,16 +11,4 @@ void computeLighting(in vec3 worldNormal, in vec3 lightDirection, in vec3 viewDi
   float specular = kEnergyConservation * pow( max( dot( worldNormal, halfwayDirection ) , 0.0), kShininess);
   float diffuse = max( dot( worldNormal, lightDirection ), 0.0);
   diffuseSpecularFactor = vec2( diffuse, specular );
-}
-
-
-float computeLinearFallOf(float radius, float distance){
-    float attenuation=max(radius-distance, 0)/radius;
-    return pow(clamp(attenuation, 0.0, 1.0), 2.0);
-}
-
-float computeAngularFallOf(float currAngleCos,float angleOuter,float angleInner){
-    float outerAngleCos = cos(angleOuter);
-    float innerAngleCos = cos(angleInner);
-    return clamp((currAngleCos-outerAngleCos)/(innerAngleCos-outerAngleCos), 0.0, 1.0);
 }

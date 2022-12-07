@@ -47,6 +47,7 @@ MaterialDef BlinnPhongLightVolumes {
         }
         Defines{
             LIGHTS : Lights
+            LIGHT_MODE : LightMode
         }
     }
 
@@ -62,6 +63,7 @@ MaterialDef BlinnPhongLightVolumes {
         }
         Defines{
             LIGHTS : Lights
+            LIGHT_MODE : LightMode
             SHADOW : ShadowMap
             SHADOWMODE : ShadowMode
         }
@@ -82,6 +84,7 @@ MaterialDef BlinnPhongLightVolumes {
             }
             Defines{
                 LIGHTS : Lights
+                LIGHT_MODE : LightMode
                 SHADOW : ShadowMap
                 SHADOWMODE : ShadowMode
             }

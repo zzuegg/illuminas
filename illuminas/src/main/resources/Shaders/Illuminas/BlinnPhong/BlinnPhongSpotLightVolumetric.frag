@@ -1,5 +1,5 @@
 #extension GL_ARB_separate_shader_objects : enable
-#import "Shaders/Illuminas/ShaderLib/BlinnPhong.glsllib"
+#import "Shaders/Illuminas/ShaderLib/Lighting.glsllib"
 #import "Shaders/Illuminas/ShaderLib/GBuffer.glsllib"
 #import "Shaders/Illuminas/ShaderLib/Shadow.glsllib"
 uniform mat4 g_ViewProjectionMatrixInverse;
@@ -12,9 +12,6 @@ in vec3 lightColor;
 in vec2 lightAngles;
 in float lightRadius;
 in float lightAngularFallofFactor;
-uniform sampler2D m_NormalDepth;
-uniform sampler2D m_AlbedoSpecular;
-uniform sampler2D m_Depth;
 in vec3 worldPosition;
 
 in vec2 texCoords;
