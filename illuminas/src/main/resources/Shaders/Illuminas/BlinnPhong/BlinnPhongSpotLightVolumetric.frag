@@ -5,7 +5,7 @@
 uniform mat4 g_ViewProjectionMatrixInverse;
 uniform vec3 g_CameraPosition;
 uniform vec2 g_Resolution;
-
+uniform float m_VolumetricIntensity;
 in vec3 lightPosition;
 in vec3 lightDirection;
 in vec3 lightColor;
@@ -30,11 +30,12 @@ void main(){
     vec3 depthPosition=decodeWorldPosition(g_ViewProjectionMatrixInverse, texture(m_Depth, fragTexCoord).x, fragTexCoord);
     float cameraToLight=distance(worldPosition, g_CameraPosition);
     float cameraToWorld=distance(depthPosition, g_CameraPosition);
+
+    float fallOff=1;
     if (gl_FrontFacing){
-        fragColor=(vec4(lightColor, 1)*0.01)*min(cameraToWorld, cameraToLight);
+        fragColor=(vec4(lightColor, 1)*m_VolumetricIntensity)*(min(cameraToWorld, cameraToLight)-1.0)*fallOff;
     }
     if (!gl_FrontFacing){
-        fragColor=-(vec4(lightColor, 1)*0.01)*min(cameraToWorld, cameraToLight);
+        fragColor=-(vec4(lightColor, 1)*m_VolumetricIntensity)*(min(cameraToWorld, cameraToLight)-1.0)*fallOff;
     }
-    //fragColor=vec4(worldPosition, 1);
 }

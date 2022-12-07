@@ -43,26 +43,8 @@ public class GeometryBasedLightsMaterial {
         material.setInt("Lights", lightCount);
     }
 
-    public static void setShadowMap(PipelineContext renderPipeline, Material spotlightMaterial, PipelineContext contextForShadowMode, ShadowMode shadowMode, Camera camera) {
-        spotlightMaterial.setParam("ShadowViewProjectionMatrix", VarType.Matrix4, camera.getViewProjectionMatrix());
-        spotlightMaterial.setInt("ShadowMode",shadowMode.getShadowMode());
-        spotlightMaterial.setTexture("ShadowMap", Constants.OutputResult.get(contextForShadowMode));
-    }
 
     public static void setLightAngularFallOfFactor(Material material, float fallOfFactor) {
         material.setFloat("LightAngularFallofFactor", fallOfFactor);
-    }
-
-    public static void setShadowCubeMap(PipelineContext renderPipeline, Material material, PipelineContext[] contextForShadowMode, ShadowMode shadowMode) {
-        Image[] images = new Image[6];
-        for (int i = 0; i < 6; i++) {
-            images[i] = shadowMode.getShadowMapTexture().get(contextForShadowMode[i]).getImage();
-        }
-        Image cubeImage = new Image(images[0].getFormat(), images[0].getWidth(), images[0].getHeight(), null, images[0].getColorSpace());
-        for (int i = 0; i < 6; i++) {
-            cubeImage.addData(images[i].getData(0));
-        }
-        TextureCubeMap cubeMap = new TextureCubeMap(cubeImage);
-        material.setTextureParam("ShadowCubeMap", VarType.TextureCubeMap, cubeMap);
     }
 }

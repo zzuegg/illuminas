@@ -1,10 +1,12 @@
 #import "Shaders/Illuminas/ShaderLib/GBuffer.glsllib"
+#import "Shaders/Illuminas/ShaderLib/BlinnPhong.glsllib"
 layout (triangles, equal_spacing, cw) in;
 uniform mat3 g_WorldMatrix;
 uniform mat4 g_ViewProjectionMatrix;
 uniform mat4 m_ShadowViewProjectionMatrix;
 uniform vec2 g_Resolution;
 uniform sampler2D m_ShadowMap;
+
 in vec3 lightPositionX[];
 in vec3 lightDirectionX[];
 in vec3 lightColorX[];
@@ -15,6 +17,8 @@ in vec3 worldPositionX[];
 in vec2 texCoordsX[];
 in float vertTypeX[];
 out vec3 lightColor;
+out float lightRadius;
+out vec3 lightPosition;
 out vec2 texCoords;
 out vec3 worldPosition;
 float linearize_depth(float d,float zNear,float zFar)
@@ -25,7 +29,8 @@ float linearize_depth(float d,float zNear,float zFar)
 
 void main(){
     lightColor=lightColorX[0];
-
+    lightPosition=lightPositionX[0];
+    lightRadius=lightRadiusX[0];
     //    fragTexCoord=gl_FragCoord.xy/g_Resolution;
     //    vec3 depthPosition=decodeWorldPosition(g_ViewProjectionMatrixInverse, texture(m_Depth, fragTexCoord).x, fragTexCoord);
     texCoords=texCoordsX[0]*gl_TessCoord.x+ texCoordsX[1]*gl_TessCoord.y+ texCoordsX[2]*gl_TessCoord.z;
@@ -37,12 +42,17 @@ void main(){
     vec2 moments = texture2D(m_ShadowMap, shadowCoordinates.xy).xy;
     vec3 direction=normalize(worldPosition-lightPositionX[0]);
     float depth=linearize_depth(moments.x,0.1f,lightRadiusX[0]);
+    depth=min(depth,lightRadiusX[0]);
+    float currAngleCos = dot(normalize(lightDirectionX[0]), normalize(direction));
+    float angularFallOff = computeAngularFallOf(currAngleCos, lightAnglesX[0].x, lightAnglesX[0].y);
+    angularFallOff=min(angularFallOff*5,1);
+    angularFallOff=max(angularFallOff,lightAngularFallofFactorX[0]);
     if(vertType==0){
         worldPosition=lightPositionX[0];
         gl_Position = g_ViewProjectionMatrix*vec4(worldPosition, 1.0);
         texCoords=gl_Position.xy;
     }else {
-        worldPosition=lightPositionX[0]+(direction*depth*min(vertType,1));
+        worldPosition=lightPositionX[0]+(direction*depth*min(vertType,1)*angularFallOff);
         gl_Position = g_ViewProjectionMatrix*vec4(worldPosition, 1.0);
         texCoords=gl_Position.xy;
     }

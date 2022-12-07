@@ -21,4 +21,8 @@ public class ExtendedSpotLight extends SpotLight {
     @Getter
     @Setter
     boolean castingVolumetric;
+
+    @Getter
+    @Setter
+    float volumetricIntensity;
 }

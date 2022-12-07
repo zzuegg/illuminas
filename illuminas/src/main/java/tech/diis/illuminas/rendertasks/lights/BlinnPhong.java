@@ -8,12 +8,14 @@ public class BlinnPhong implements LightMode {
     final Texture2dDefinition baseColorsSpecular;
     final Texture2dDefinition depth;
     final RenderTargetDefinition renderTargetDefinition;
+    final int lightMode;
 
     public BlinnPhong(Texture2dDefinition worldNormals, Texture2dDefinition baseColorsSpecular, Texture2dDefinition depth, RenderTargetDefinition renderTargetDefinition) {
         this.worldNormals = worldNormals;
         this.baseColorsSpecular = baseColorsSpecular;
         this.depth = depth;
         this.renderTargetDefinition = renderTargetDefinition;
+        this.lightMode = 1;
     }
 
     @Override
@@ -21,6 +23,7 @@ public class BlinnPhong implements LightMode {
         material.setTexture("NormalDepth", worldNormals.get(renderPipeline));
         material.setTexture("AlbedoSpecular", baseColorsSpecular.get(renderPipeline));
         material.setTexture("Depth", depth.get(renderPipeline));
+        material.setInt("LightMode", lightMode);
     }
 
     @Override

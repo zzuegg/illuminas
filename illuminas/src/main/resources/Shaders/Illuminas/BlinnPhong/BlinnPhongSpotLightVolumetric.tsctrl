@@ -23,7 +23,7 @@ in float vertType[];
 
 int m_TessellationFactor;
 void main(){
-    m_TessellationFactor=64;
+    m_TessellationFactor=128;
 
     if (gl_InvocationID == 0){
 

@@ -1,6 +1,8 @@
 package tech.diis.illuminas.rendertasks;
 
+import com.jme3.anim.AnimComposer;
 import com.jme3.asset.AssetManager;
+import com.jme3.scene.Geometry;
 import tech.diis.illuminas.*;
 
 public class CollectShadowData extends RenderTask {
@@ -23,7 +25,7 @@ public class CollectShadowData extends RenderTask {
         ShadowData shadowData = shadowDataDefinition.get(renderPipeline);
         if (shadowData == null || this.newDataEachFrame) {
             shadowData = new ShadowData();
-            shadowData.populate(renderPipeline.getScene(), renderPipeline.getCamera());
+            shadowData.populate(renderPipeline,renderPipeline.getScene(), renderPipeline.getCamera());
         } else {
             shadowData.clear();
         }

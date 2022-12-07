@@ -20,5 +20,9 @@ public class ExtendedPointLight extends PointLight {
 
     @Getter
     @Setter
-    boolean castingVolumetric;
+    boolean volumetricCasting;
+
+    @Getter
+    @Setter
+    float volumetricIntensity;
 }

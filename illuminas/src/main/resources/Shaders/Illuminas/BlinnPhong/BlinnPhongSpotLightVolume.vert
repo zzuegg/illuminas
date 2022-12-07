@@ -44,5 +44,7 @@ void main(){
 
     vec3 origin=lightPosition;
     vec3 centerPoint=origin + (offsetMod[vertexId] * lightDirection * lightRadius);
-    gl_Position=g_ViewProjectionMatrix*vec4(centerPoint+mod*lightRadius, 1);
+    float angleFactor=tan(lightAngles.x);
+    vec3 worldPosition=centerPoint+mod*lightRadius*angleFactor;
+    gl_Position=g_ViewProjectionMatrix*vec4(worldPosition, 1);
 }

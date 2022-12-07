@@ -4,6 +4,8 @@ MaterialDef BlinnPhongLightVolumes {
         Texture2D NormalDepth -LINEAR;
         Texture2D Depth -LINEAR;
         Vector4 AmbientLight;
+
+        Int LightMode;
         Vector3Array LightDirections;
         Vector3Array LightPositions;
         Vector3Array LightColors;
@@ -16,6 +18,8 @@ MaterialDef BlinnPhongLightVolumes {
         Texture2D ShadowMap -LINEAR;
         TextureCubeMap ShadowCubeMap -LINEAR;
         Matrix4 ShadowViewProjectionMatrix;
+
+        Float VolumetricIntensity;
     }
 
     Technique AmbientDirectionalLightVolumes{
@@ -27,6 +31,7 @@ MaterialDef BlinnPhongLightVolumes {
         }
         Defines{
             LIGHTS : Lights
+            LIGHT_MODE : LightMode
         }
     }
 

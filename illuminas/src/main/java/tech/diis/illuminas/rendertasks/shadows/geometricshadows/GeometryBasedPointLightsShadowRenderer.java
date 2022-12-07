@@ -15,15 +15,10 @@ import tech.diis.illuminas.rendertasks.shadows.IlluminasShadowUtils;
 
 public class GeometryBasedPointLightsShadowRenderer extends GeometryBasedSpotLightsShadowRenderer {
 
-    private final GeometryBasedShadows geometryBasedShadows;
-    private final RenderState renderState;
+
 
     public GeometryBasedPointLightsShadowRenderer(GeometryBasedShadows geometryBasedShadows, AssetManager assetManager, LightMode lightMode, int maxLights, RenderState renderState) {
         super(geometryBasedShadows, assetManager, lightMode, 1, renderState);
-
-
-        this.geometryBasedShadows = geometryBasedShadows;
-        this.renderState = renderState;
     }
 
 

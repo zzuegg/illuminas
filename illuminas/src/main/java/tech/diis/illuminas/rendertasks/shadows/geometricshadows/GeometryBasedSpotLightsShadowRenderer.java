@@ -36,25 +36,25 @@ public class GeometryBasedSpotLightsShadowRenderer extends GeometryBasedSpotLigh
             IlluminasShadowUtils.spotLightToCamera(extendedSpotLight, camera);
             contextForShadowMode.execute(camera, renderPipeline.getScene(), null);
             contextForShadowMode.swapPostProcessorTargets();
-            GeometryBasedLightsMaterial.setShadowMap(renderPipeline, material, contextForShadowMode, extendedSpotLight.getShadowMode(), camera);
+            extendedSpotLight.getShadowMode().setMaterialParameters(contextForShadowMode,material,camera);
             renderPipeline.getRenderManager().setForcedRenderState(renderState);
             renderPipeline.getRenderManager().setCamera(renderPipeline.getCamera(), false);
             Constants.OutputTarget.bind(renderPipeline);
             super.renderSpotLights(renderPipeline, spotLight, count, lightPositions, lightDirections, lightColors, lightAngles, lightRadii, angularFallOfFactor);
-            if(extendedSpotLight.isCastingVolumetric()){
+
+            if (extendedSpotLight.isCastingVolumetric()) {
                 renderPipeline.getRenderManager().setForcedTechnique("SpotLightVolumetric");
                 renderState.setFaceCullMode(RenderState.FaceCullMode.Off);
                 renderState.setDepthTest(false);
                 geometry.getMesh().setPatchVertexCount(3);
                 geometry.getMesh().setMode(Mesh.Mode.Patch);
-                renderState.setWireframe(false);
-                //renderState.setDepthFunc(RenderState.TestFunction.Less);
+                material.setFloat("VolumetricIntensity", extendedSpotLight.getVolumetricIntensity());
                 super.renderSpotLights(renderPipeline, spotLight, count, lightPositions, lightDirections, lightColors, lightAngles, lightRadii, angularFallOfFactor);
-                //renderState.setDepthFunc(RenderState.TestFunction.GreaterOrEqual);
                 renderState.setWireframe(false);
                 geometry.getMesh().setMode(Mesh.Mode.Triangles);
                 renderState.setFaceCullMode(RenderState.FaceCullMode.Front);
             }
+
         }
     }
 }
