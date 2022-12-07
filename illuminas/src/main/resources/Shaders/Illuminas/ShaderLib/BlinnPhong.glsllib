@@ -6,9 +6,14 @@ const float kPi = 3.14159265;
 const float kShininess = 16.0;
 const float kEnergyConservation = ( 8.0 + kShininess ) / ( 8.0 * kPi );
 
-void computeLighting(in vec3 worldNormal, in vec3 lightDirection, in vec3 viewDirection, out vec2 diffuseSpecularFactor){
-  vec3 halfwayDirection = normalize( lightDirection + viewDirection );
+vec2 computeLightingFactors(in vec3 worldNormal, in vec3 lightDirection, in vec3 cameraDirection){
+  vec3 halfwayDirection = normalize( lightDirection + cameraDirection );
   float specular = kEnergyConservation * pow( max( dot( worldNormal, halfwayDirection ) , 0.0), kShininess);
   float diffuse = max( dot( worldNormal, lightDirection ), 0.0);
-  diffuseSpecularFactor = vec2( diffuse, specular );
+  return vec2( diffuse, specular );
+}
+
+vec3 computeFinalColor(in vec3 lightColor,in vec2 gbufferTexCoords,in vec2 lightingFactors,in float angularFallOff,in float linearFallOff){
+  vec4 albedoSpecular=texture(m_AlbedoSpecular, gbufferTexCoords);
+  return ((lightColor*albedoSpecular.xyz*lightingFactors.x)+(lightColor*albedoSpecular.xyz*lightingFactors.y*albedoSpecular.w))*angularFallOff*linearFallOff;
 }

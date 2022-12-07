@@ -61,7 +61,6 @@ public class GeometryBasedSpotLightRenderer {
     }
 
     protected void renderSpotLights(PipelineContext renderPipeline, SpotLight spotLights, int count, Vector3f[] lightPositions, Vector3f[] lightDirections, Vector3f[] lightColors, Vector2f[] lightAngles, float[] lightRadii, float angularFallOfFactor) {
-
         SpotLightGeometry.updateGeometryForRendering(geometry, count);
         GeometryBasedLightsMaterial.setLightMode(renderPipeline, material, lightMode);
         GeometryBasedLightsMaterial.setLightPositions(material, lightPositions);

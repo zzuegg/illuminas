@@ -1,4 +1,3 @@
-
 #if (LIGHT_MODE == 1)
 #import "Shaders/Illuminas/ShaderLib/BlinnPhong.glsllib"
 #endif
@@ -9,8 +8,16 @@ float computeLinearFallOf(float radius, float distance){
     return pow(clamp(attenuation, 0.0, 1.0), 2.0);
 }
 
-float computeAngularFallOf(float currAngleCos,float angleOuter,float angleInner){
+float computeAngularFallOf(float currAngleCos, float angleOuter, float angleInner){
     float outerAngleCos = cos(angleOuter);
     float innerAngleCos = cos(angleInner);
     return clamp((currAngleCos-outerAngleCos)/(innerAngleCos-outerAngleCos), 0.0, 1.0);
+}
+
+
+vec3 computeLighting(in vec3 lightColor,in vec2 texCoords, in vec3 lightDirection, in vec3 cameraDirection, float angularFallOff, float linearFallOff){
+
+    vec3 worldNormal=texture(m_NormalDepth, texCoords).xyz;
+    vec2 lightingFactors= computeLightingFactors(worldNormal, lightDirection, cameraDirection);
+    return computeFinalColor(lightColor,texCoords, lightingFactors,angularFallOff,linearFallOff);
 }

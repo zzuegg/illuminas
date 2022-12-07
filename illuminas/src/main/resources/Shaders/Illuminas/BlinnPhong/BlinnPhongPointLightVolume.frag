@@ -22,22 +22,14 @@ void main(){
     vec2 fragTexCoord=gl_FragCoord.xy/g_Resolution;
     vec3 worldNormal=texture(m_NormalDepth, fragTexCoord).xyz;
     vec3 worldPosition=decodeWorldPosition(g_ViewProjectionMatrixInverse, texture(m_Depth, fragTexCoord).x, fragTexCoord);
-    vec4 albedoSpecular=texture(m_AlbedoSpecular, fragTexCoord);
-    vec3 lightDirectionWorld =lightPosition-worldPosition;
+    vec3 lightDirection =lightPosition-worldPosition;
     vec3 viewDirection=normalize(g_CameraPosition-worldPosition);
-    float lightToWorldDistance = length(lightDirectionWorld);
-    lightDirectionWorld = normalize(lightDirectionWorld);
+    float lightToWorldDistance = length(lightDirection);
+    lightDirection = normalize(lightDirection);
 
-    vec2 diffuseSpecular;
-    computeLighting(worldNormal, lightDirectionWorld, viewDirection, diffuseSpecular);
+
     float linearFallOf = computeLinearFallOf(lightRadius, lightToWorldDistance);
 
     float shadowFactor=1;
-    #if defined SHADOWCUBE
-    shadowFactor=calculateShadow(worldPosition, lightDirectionWorld, lightToWorldDistance)-1;
-    #endif
-
-    vec4 diffuseColor=vec4(linearFallOf*diffuseSpecular.x*albedoSpecular.yxz*lightColor, 1.0);
-    vec4 specularColor=vec4(linearFallOf*diffuseSpecular.y*albedoSpecular.w*lightColor, 1.0);
-    fragColor=diffuseColor+specularColor*shadowFactor;
+    fragColor+=vec4(computeLighting(lightColor,fragTexCoord, lightDirection, viewDirection, linearFallOf, 1), 1)*shadowFactor;
 }

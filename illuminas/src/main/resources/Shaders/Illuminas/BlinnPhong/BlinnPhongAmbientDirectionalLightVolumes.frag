@@ -15,18 +15,16 @@ uniform int m_Lights;
 layout (location = 0) out vec4 fragColor;
 
 void main(){
-    vec3 worldNormal=texture(m_NormalDepth, fragTexCoord).xyz;
     vec3 worldPos=decodeWorldPosition(g_ViewProjectionMatrixInverse,texture(m_Depth, fragTexCoord).x, fragTexCoord);
-    vec4 albedoSpecular=texture(m_AlbedoSpecular, fragTexCoord);
-    vec2 diffuseSpecular;
     vec3 lightDirection;
     vec3 lightColor;
     vec3 viewDirection=normalize(g_CameraPosition-worldPos);
     for (int i=0;i<m_Lights;i++){
         lightColor=m_LightColors[i];
         lightDirection=normalize(-m_LightDirections[i]);
-        computeLighting(worldNormal, lightDirection, viewDirection, diffuseSpecular);
-        fragColor+=vec4((lightColor*albedoSpecular.xyz*diffuseSpecular.x)+(lightColor*albedoSpecular.xyz*diffuseSpecular.y*albedoSpecular.w), 1);
+        //computeLighting(worldNormal, lightDirection, viewDirection, diffuseSpecular);
+        fragColor+=vec4(computeLighting(lightColor,fragTexCoord,lightDirection, viewDirection, 1, 1), 1);
     }
+    vec4 albedoSpecular=texture(m_AlbedoSpecular, fragTexCoord);
     fragColor+=vec4(albedoSpecular.xyz*m_AmbientLight.xyz, 1);
 }
