@@ -1,6 +1,6 @@
 MaterialDef GBufferDebugPhong {
     MaterialParameters{
-        Texture2D CurrentResult;
+        Texture2D CurrentResult -LINEAR;
         Vector2 Direction;
     }
 

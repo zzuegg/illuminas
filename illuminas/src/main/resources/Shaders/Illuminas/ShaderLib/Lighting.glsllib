@@ -1,7 +1,16 @@
+#ifndef PI
+#define PI 3.14159265358979323846264
+#endif
 #if (LIGHT_MODE == 1)
 #import "Shaders/Illuminas/ShaderLib/BlinnPhong.glsllib"
 #endif
+#if(LIGHT_MODE == 2)
+#import "Shaders/Illuminas/ShaderLib/MetallicRoughness.glsllib"
+#endif
 
+const float kPi = 3.14159265;
+const float kShininess = 16.0;
+const float kEnergyConservation = (8.0 + kShininess) / (8.0 * kPi);
 
 float computeLinearFallOf(float radius, float distance){
     float attenuation=max(radius-distance, 0)/radius;
@@ -15,9 +24,18 @@ float computeAngularFallOf(float currAngleCos, float angleOuter, float angleInne
 }
 
 
-vec3 computeLighting(in vec3 lightColor,in vec2 texCoords, in vec3 lightDirection, in vec3 cameraDirection, float angularFallOff, float linearFallOff){
+
+vec2 computeLightingFactors(in vec3 worldNormal, in vec3 lightDirection, in vec3 cameraDirection){
+    vec3 halfwayDirection = normalize(lightDirection + cameraDirection);
+    float specular = kEnergyConservation * pow(max(dot(worldNormal, halfwayDirection), 0.0), kShininess);
+    float diffuse = max(dot(worldNormal, lightDirection), 0.0);
+    return vec2(diffuse, specular);
+}
+
+
+vec3 computeLighting(in vec3 lightColor, in vec2 texCoords, in vec3 lightDirection, in vec3 cameraDirection, float angularFallOff, float linearFallOff){
 
     vec3 worldNormal=texture(m_NormalDepth, texCoords).xyz;
     vec2 lightingFactors= computeLightingFactors(worldNormal, lightDirection, cameraDirection);
-    return computeFinalColor(lightColor,texCoords, lightingFactors,angularFallOff,linearFallOff);
+    return computeFinalColor(lightColor, lightDirection, worldNormal, cameraDirection, texCoords, lightingFactors, angularFallOff, linearFallOff);
 }

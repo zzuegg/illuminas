@@ -1,0 +1,78 @@
+MaterialDef PhongDeferred {
+    MaterialParameters{
+
+        Color BaseColor : 1.0 1.0 1.0 1.0
+        Float Metallic : 1.0
+        Float Roughness : 1.0
+        Color Emissive
+        Float EmissivePower : 3.0
+        Float EmissiveIntensity : 2.0
+        Texture2D BaseColorMap;
+        Texture2D MetallicMap -LINEAR
+        Texture2D RoughnessMap -LINEAR
+        Texture2D MetallicRoughnessMap -LINEAR;
+        Texture2D NormalMap -LINEAR;
+        Texture2D EmissiveMap
+
+        Float AlphaDiscardThreshold
+        //The type of normal map: -1.0 (DirectX), 1.0 (OpenGl)
+        Float NormalType : -1.0
+
+        // For hardware skinning
+        Int NumberOfBones
+        Matrix4Array BoneMatrices
+    }
+
+    Technique{
+        VertexShader GLSL150: Shaders/Illuminas/Common/Model.vert
+        FragmentShader GLSL150: Shaders/Illuminas/BlinnPhong/ForwardMetallicRoughness.frag
+
+                WorldParameters {
+                    WorldMatrix
+                    NormalMatrix
+                    WorldViewProjectionMatrix
+                    WorldMatrixInverseTranspose
+                    WorldNormalMatrix
+                }
+    }
+
+        Technique IlluminasDeferred{
+            VertexShader GLSL150: Shaders/Illuminas/Common/Model.vert
+            FragmentShader GLSL150: Shaders/Illuminas/BlinnPhong/DeferredMetallicRoughness.frag
+
+                    WorldParameters {
+                        WorldMatrix
+                        NormalMatrix
+                        WorldViewProjectionMatrix
+                        WorldMatrixInverseTranspose
+                        WorldNormalMatrix
+                    }
+
+                    Defines{
+                        DISCARD_ALPHA : AlphaDiscardThreshold
+                        NORMAL_TYPE: NormalType
+                        BASECOLORMAP : BaseColorMap
+                        NORMALMAP : NormalMap
+                        METALLICMAP : MetallicMap
+                        ROUGHNESSMAP : RoughnessMap
+                        EMISSIVEMAP : EmissiveMap
+                        EMISSIVE : Emissive
+                        DISCARD_ALPHA : AlphaDiscardThreshold
+                        USE_PACKED_MR: MetallicRoughnessMap
+                        NUM_BONES : NumberOfBones
+                    }
+        }
+
+        Technique ShadowVSM{
+                VertexShader GLSL150: Shaders/Illuminas/Shadow/RenderShadow.vert
+                FragmentShader GLSL150: Shaders/Illuminas/Shadow/RenderVSM.frag
+                WorldParameters {
+                    WorldViewProjectionMatrix
+                    WorldMatrix
+                }
+
+                Defines{
+                    NUM_BONES : NumberOfBones
+                }
+        }
+}

@@ -25,6 +25,14 @@ void main(){
         //computeLighting(worldNormal, lightDirection, viewDirection, diffuseSpecular);
         fragColor+=vec4(computeLighting(lightColor,fragTexCoord,lightDirection, viewDirection, 1, 1), 1);
     }
+
+    #if (LIGHT_MODE == 1)
     vec4 albedoSpecular=texture(m_AlbedoSpecular, fragTexCoord);
+    #endif
+     #if (LIGHT_MODE == 2)
+    vec4 albedoSpecular=texture(m_BaseColor, fragTexCoord);
+    #endif
     fragColor+=vec4(albedoSpecular.xyz*m_AmbientLight.xyz, 1);
+
+
 }

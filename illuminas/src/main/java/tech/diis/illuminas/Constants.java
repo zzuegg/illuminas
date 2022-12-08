@@ -20,4 +20,10 @@ public class Constants {
     public static RenderTargetDefinition OutputTarget = new RenderTargetDefinition("OutputRenderTarget", false, 1);
     public static Texture2dDefinition OutputResult = new Texture2dDefinition("OutputResult");
     public static Texture2dDefinition VSM_ShadowMap = new Texture2dDefinition("VSM ShadowMap", Image.Format.RG32F, ColorSpace.Linear, Texture.MagFilter.Nearest, Texture.MinFilter.NearestNoMipMaps);
+
+    public static Texture2dDefinition BaseColor = new Texture2dDefinition("BaseColorsSpecular", Image.Format.RGB16F, ColorSpace.Linear, Texture.MagFilter.Nearest, Texture.MinFilter.NearestNoMipMaps);
+    public static Texture2dDefinition MetallicRoughness = new Texture2dDefinition("BaseColorsSpecular", Image.Format.RGB16F, ColorSpace.Linear, Texture.MagFilter.Nearest, Texture.MinFilter.NearestNoMipMaps);
+
+
+    public static RenderTargetDefinition GBufferMetallicRoughness = new RenderTargetDefinition("GBuffer Metallic Roughness",false,1,WorldNormals,BaseColor,MetallicRoughness,DepthStencil);
 }

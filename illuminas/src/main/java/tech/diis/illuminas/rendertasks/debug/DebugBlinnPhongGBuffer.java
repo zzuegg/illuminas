@@ -26,7 +26,7 @@ public class DebugBlinnPhongGBuffer extends RenderTask {
         Constants.OutputTarget.bind(renderPipeline);
         debugMaterial.setTexture("CurrentResult", Constants.OutputResult.get(renderPipeline));
         debugMaterial.setTexture("NormalDepth", Constants.WorldNormals.get(renderPipeline));
-        debugMaterial.setTexture("AlbedoSpecular", Constants.BaseColorsSpecular.get(renderPipeline));
+        debugMaterial.setTexture("AlbedoSpecular", Constants.BaseColor.get(renderPipeline));
         debugMaterial.setTexture("Depth", Constants.DepthStencil.get(renderPipeline));
         Constants.FS_QUAD.setMaterial(debugMaterial);
         renderPipeline.getRenderManager().renderGeometry(Constants.FS_QUAD);

@@ -1,9 +1,13 @@
 MaterialDef BlinnPhongLightVolumes {
     MaterialParameters{
-        Texture2D AlbedoSpecular;
+        Texture2D AlbedoSpecular -LINEAR;
         Texture2D NormalDepth -LINEAR;
         Texture2D Depth -LINEAR;
+
         Vector4 AmbientLight;
+
+        Texture2D BaseColor -LINEAR;
+        Texture2D MetallicRoughness -LINEAR;
 
         Int LightMode;
         Vector3Array LightDirections;
