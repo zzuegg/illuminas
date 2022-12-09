@@ -1,5 +1,5 @@
 [versions]
-jme3 = "3.6.0-SNAPSHOT"
+jme3 = "3.3.0-SNAPSHOT"
 slf4j = "2.0.3"
 logback = "1.4.4"
 lombok = "1.18.24"

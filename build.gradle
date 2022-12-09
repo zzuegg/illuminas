@@ -6,6 +6,5 @@ subprojects {
     repositories {
         mavenLocal()
         mavenCentral()
-
     }
 }

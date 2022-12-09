@@ -25,4 +25,22 @@ public class ExtendedPointLight extends PointLight {
     @Getter
     @Setter
     float volumetricIntensity;
+
+    @Override
+    public String toString() {
+        return "ExtendedPointLight{" +
+                "shadowCasting=" + shadowCasting +
+                ", shadowMode=" + shadowMode +
+                ", shadowMapSize=" + shadowMapSize +
+                ", volumetricCasting=" + volumetricCasting +
+                ", volumetricIntensity=" + volumetricIntensity +
+                ", position=" + position +
+                ", radius=" + radius +
+                ", invRadius=" + invRadius +
+                ", color=" + color +
+                ", lastDistance=" + lastDistance +
+                ", enabled=" + enabled +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }
