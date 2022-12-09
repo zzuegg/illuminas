@@ -1,6 +1,7 @@
 package tech.diis.illuminas.rendertasks.shadows.geometricshadows;
 
 import com.jme3.asset.AssetManager;
+import com.jme3.light.DirectionalLight;
 import com.jme3.light.PointLight;
 import com.jme3.light.SpotLight;
 import com.jme3.material.RenderState;
@@ -10,6 +11,7 @@ import com.jme3.math.Vector3f;
 import tech.diis.illuminas.PipelineContext;
 import tech.diis.illuminas.RenderPipelineLayout;
 import tech.diis.illuminas.RenderTask;
+import tech.diis.illuminas.jme.lights.ExtendedDirectionalLight;
 import tech.diis.illuminas.jme.lights.ExtendedPointLight;
 import tech.diis.illuminas.jme.lights.ExtendedSpotLight;
 import tech.diis.illuminas.rendertasks.WorldData;
@@ -26,6 +28,7 @@ public class GeometryBasedShadows extends RenderTask {
 
     private final RenderState renderState;
     Map<ShadowMode, Map<Integer, PipelineContext>> shadowContextsCache;
+    DirectionalLightShadowRenderer directionalLightShadowRenderer;
     GeometryBasedSpotLightsShadowRenderer geometryBasedSpotLightsShadows;
     GeometryBasedPointLightsShadowRenderer geometryBasedPointLightsShadowRenderer;
     final LightMode lightMode;
@@ -47,6 +50,7 @@ public class GeometryBasedShadows extends RenderTask {
     @Override
     protected void initialize(RenderPipelineLayout pipelineLayout, AssetManager assetManager) {
         pipelineLayout.requires(WorldData.worldData);
+        directionalLightShadowRenderer = new DirectionalLightShadowRenderer(this, assetManager, lightMode, renderState);
         geometryBasedSpotLightsShadows = new GeometryBasedSpotLightsShadowRenderer(this, assetManager, lightMode, 1, renderState);
         geometryBasedPointLightsShadowRenderer = new GeometryBasedPointLightsShadowRenderer(this, assetManager, lightMode, 1, renderState);
     }
@@ -56,10 +60,10 @@ public class GeometryBasedShadows extends RenderTask {
         RenderState tmp = renderPipeline.getRenderManager().getForcedRenderState();
         renderPipeline.getRenderManager().setForcedRenderState(renderState);
         WorldData worldData = WorldData.worldData.get(renderPipeline);
-        Set<SpotLight> shadowCastingSpotlights = worldData.getSpotLights().stream().filter(sl -> sl instanceof ExtendedSpotLight).filter(sl -> ((ExtendedSpotLight) sl).isShadowCasting()).collect(Collectors.toSet());
+        Set<ExtendedDirectionalLight> shadowCastingDirectionalLights = worldData.getDirectionalLights().stream().filter(dl -> dl instanceof ExtendedDirectionalLight).map(dl -> (ExtendedDirectionalLight) dl).filter(ExtendedDirectionalLight::isShadowCasting).collect(Collectors.toSet());
+        directionalLightShadowRenderer.renderLights(renderPipeline, shadowCastingDirectionalLights);
+        Set<SpotLight> shadowCastingSpotlights = worldData.getSpotLights().stream().filter(sl -> sl instanceof ExtendedSpotLight).map(sl -> (ExtendedSpotLight) sl).filter(ExtendedSpotLight::isShadowCasting).collect(Collectors.toSet());
         geometryBasedSpotLightsShadows.renderLights(renderPipeline, shadowCastingSpotlights);
-        //Set<PointLight> shadowCastingPointlights = worldData.getPointLights().stream().filter(sl -> sl instanceof ExtendedPointLight).filter(sl -> ((ExtendedPointLight) sl).isShadowCasting()).collect(Collectors.toSet());
-        //geometryBasedPointLightsShadowRenderer.renderLights(renderPipeline,shadowCastingPointlights);
         geometryBasedPointLightsShadowRenderer.renderLights(renderPipeline, spotlightsFromPointlights(worldData.getPointLights()));
         renderPipeline.getRenderManager().setForcedRenderState(tmp);
     }
@@ -76,20 +80,22 @@ public class GeometryBasedShadows extends RenderTask {
         Set<SpotLight> spotLights = new HashSet<>();
         for (PointLight pointLight : collect) {
             for (int i = 0; i < 6; i++) {
-                if (pointLight instanceof ExtendedPointLight) {
-                    ExtendedSpotLight spotLight = new ExtendedSpotLight();
-                    spotLight.setShadowCasting(true);
-                    spotLight.setCastingVolumetric(((ExtendedPointLight) pointLight).isVolumetricCasting());
-                    spotLight.setVolumetricIntensity(((ExtendedPointLight) pointLight).getVolumetricIntensity());
-                    spotLight.setShadowMode(((ExtendedPointLight) pointLight).getShadowMode());
-                    spotLight.setShadowMapSize(((ExtendedPointLight) pointLight).getShadowMapSize());
-                    spotLight.setPosition(pointLight.getPosition());
-                    spotLight.setSpotRange(pointLight.getRadius());
-                    spotLight.setSpotOuterAngle(FastMath.HALF_PI / 2f);
-                    spotLight.setSpotInnerAngle(FastMath.HALF_PI / 4f);
-                    spotLight.setDirection(spotLightDirections[i]);
-                    spotLight.setColor(pointLight.getColor());
-                    spotLights.add(spotLight);
+                if (pointLight instanceof ExtendedPointLight extendedPointLight) {
+                    if (extendedPointLight.isShadowCasting()) {
+                        ExtendedSpotLight spotLight = new ExtendedSpotLight();
+                        spotLight.setShadowCasting(true);
+                        spotLight.setCastingVolumetric(extendedPointLight.isVolumetricCasting());
+                        spotLight.setVolumetricIntensity(extendedPointLight.getVolumetricIntensity());
+                        spotLight.setShadowMode(extendedPointLight.getShadowMode());
+                        spotLight.setShadowMapSize(extendedPointLight.getShadowMapSize());
+                        spotLight.setPosition(pointLight.getPosition());
+                        spotLight.setSpotRange(pointLight.getRadius());
+                        spotLight.setSpotOuterAngle(FastMath.HALF_PI / 2f);
+                        spotLight.setSpotInnerAngle(FastMath.HALF_PI / 4f);
+                        spotLight.setDirection(spotLightDirections[i]);
+                        spotLight.setColor(pointLight.getColor());
+                        spotLights.add(spotLight);
+                    }
                 }
             }
         }

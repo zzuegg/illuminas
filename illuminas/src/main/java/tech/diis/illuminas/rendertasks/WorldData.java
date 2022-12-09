@@ -89,12 +89,14 @@ public class WorldData {
     private void populateLights(LightList lightList) {
         for (int i = 0; i < lightList.size(); i++) {
             Light light = lightList.get(i);
-            switch (light.getType()) {
-                case Directional -> directionalLights.add((DirectionalLight) light);
-                case Point -> pointLights.add((PointLight) light);
-                case Spot -> spotLights.add((SpotLight) light);
-                case Ambient -> ambientLights.add((AmbientLight) light);
-                case Probe -> lightProbes.add((LightProbe) light);
+            if (light.isEnabled()) {
+                switch (light.getType()) {
+                    case Directional -> directionalLights.add((DirectionalLight) light);
+                    case Point -> pointLights.add((PointLight) light);
+                    case Spot -> spotLights.add((SpotLight) light);
+                    case Ambient -> ambientLights.add((AmbientLight) light);
+                    case Probe -> lightProbes.add((LightProbe) light);
+                }
             }
         }
     }

@@ -18,4 +18,8 @@ public class ExtendedDirectionalLight extends DirectionalLight {
     @Getter
     @Setter
     int shadowMapSize;
+
+    @Getter
+    @Setter
+    int numberOfSplits;
 }
