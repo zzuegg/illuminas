@@ -89,7 +89,7 @@ float calculateShadow(in vec3 worldPos, in vec3 lightDirection, float distance){
 
     #endif
     moments = texture2D(m_ShadowMap, shadowCoordinates.xy).xy;
-    shadowCoordinates.z+=0.0003f;
+    shadowCoordinates.z-=0.0003f;
     return chebyshevUpperBound(moments,shadowCoordinates.z);
     return min(1.0f,max(0.0f,vsmThreejs(moments,shadowCoordinates.z)));
 }

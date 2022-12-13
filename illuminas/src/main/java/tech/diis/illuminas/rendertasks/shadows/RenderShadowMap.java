@@ -22,7 +22,7 @@ public class RenderShadowMap extends RenderTask {
         this.mode = mode;
         this.renderShadowMapRenderState = new RenderState();
         this.renderShadowMapRenderState.setBlendMode(RenderState.BlendMode.Off);
-        this.renderShadowMapRenderState.setFaceCullMode(RenderState.FaceCullMode.Front);
+        this.renderShadowMapRenderState.setFaceCullMode(RenderState.FaceCullMode.Back);
         this.renderShadowMapRenderState.setDepthTest(true);
         this.renderShadowMapRenderState.setDepthWrite(true);
     }
@@ -37,7 +37,7 @@ public class RenderShadowMap extends RenderTask {
         ShadowData shadowData = ShadowData.ShadowData.get(renderPipeline);
         Constants.OutputTarget.bind(renderPipeline);
         renderPipeline.getRenderManager().setCamera(renderPipeline.getCamera(), false);
-        renderPipeline.getRenderManager().getRenderer().setBackgroundColor(new ColorRGBA(0, 0, 0, 0));
+        renderPipeline.getRenderManager().getRenderer().setBackgroundColor(new ColorRGBA(1, 1, 1, 1));
         renderPipeline.getRenderManager().getRenderer().clearBuffers(true, true, true);
         String forcedTechnique = renderPipeline.getRenderManager().getForcedTechnique();
         renderPipeline.getRenderManager().setForcedTechnique("ShadowVSM");
