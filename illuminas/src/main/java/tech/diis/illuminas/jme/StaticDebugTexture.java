@@ -25,7 +25,9 @@ public class StaticDebugTexture {
 
     public void update() {
         for (int i = 0; i < 6; i++) {
-            geo[i].getMaterial().setTexture("ColorMap", texture[i]);
+            if (texture[i] != null) {
+                geo[i].getMaterial().setTexture("ColorMap", texture[i]);
+            }
         }
     }
 }

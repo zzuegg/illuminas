@@ -21,5 +21,9 @@ public class ExtendedDirectionalLight extends DirectionalLight {
 
     @Getter
     @Setter
-    int numberOfSplits;
+    int numberOfSplits=6;
+
+    @Getter
+    @Setter
+    float lambda = 0.9f;
 }

@@ -6,6 +6,7 @@ out vec4 fragColor;
 
 void main()
 {
+    #if (SHADOWMAPMODE == 1)
     float alpha=texture2D(m_AlbedoMap, texCoord).a;
     if (alpha<0.1){
         discard;
@@ -23,4 +24,5 @@ void main()
 
 
     fragColor = vec4(moment1, moment2, 0.0, 0.0);
+    #endif
 }

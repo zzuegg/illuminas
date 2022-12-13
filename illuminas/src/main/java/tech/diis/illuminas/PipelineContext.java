@@ -9,10 +9,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
 public class PipelineContext implements RenderPipelineLayout {
@@ -47,7 +44,7 @@ public class PipelineContext implements RenderPipelineLayout {
     public PipelineContext(String name, RenderPipeline renderPipeline) {
         this.name = name;
         this.renderPipeline = renderPipeline;
-        this.pipelineResources = new HashMap<>();
+        this.pipelineResources = new IdentityHashMap<>();
         this.orderedResources = new ArrayList<>();
         this.initialized = false;
         this.resizeRequired = true;
@@ -149,6 +146,7 @@ public class PipelineContext implements RenderPipelineLayout {
             log.error("Required resource {} not available in pipeline {}", resourceDefinition.getName(), name);
             throw new RuntimeException("Resource does not exist");
         }
+        log.trace("{}",resourceDefinition.getName());
         return (RESOURCE) resource.object;
     }
 

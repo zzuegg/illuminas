@@ -1,26 +1,28 @@
 MaterialDef PhongDeferred {
     MaterialParameters{
 
-        Color BaseColor : 1.0 1.0 1.0 1.0
-        Float Metallic : 1.0
-        Float Roughness : 1.0
-        Color Emissive
-        Float EmissivePower : 3.0
-        Float EmissiveIntensity : 2.0
+        Color BaseColor : 1.0 1.0 1.0 1.0;
+        Float Metallic : 1.0;
+        Float Roughness : 1.0;
+        Color Emissive;
+        Float EmissivePower : 3.0;
+        Float EmissiveIntensity : 2.0;
         Texture2D BaseColorMap;
-        Texture2D MetallicMap -LINEAR
-        Texture2D RoughnessMap -LINEAR
+        Texture2D MetallicMap -LINEAR;
+        Texture2D RoughnessMap -LINEAR;
         Texture2D MetallicRoughnessMap -LINEAR;
         Texture2D NormalMap -LINEAR;
-        Texture2D EmissiveMap
+        Texture2D EmissiveMap;
 
-        Float AlphaDiscardThreshold
+        Float AlphaDiscardThreshold;
         //The type of normal map: -1.0 (DirectX), 1.0 (OpenGl)
-        Float NormalType : -1.0
+        Float NormalType : -1.0;
 
         // For hardware skinning
-        Int NumberOfBones
-        Matrix4Array BoneMatrices
+        Int NumberOfBones;
+        Matrix4Array BoneMatrices;
+
+        Int ShadowMapMode;
     }
 
     Technique{
@@ -73,6 +75,7 @@ MaterialDef PhongDeferred {
 
                 Defines{
                     NUM_BONES : NumberOfBones
+                    SHADOWMAPMODE : ShadowMapMode
                 }
         }
 }

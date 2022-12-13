@@ -14,6 +14,6 @@ public class VSM extends ShadowMode{
         shadowMapTexture = new Texture2dDefinition("VSM-ShadowMap", Image.Format.RG32F, ColorSpace.Linear, Texture.MagFilter.Bilinear, Texture.MinFilter.BilinearNoMipMaps);
         renderPipeline = new RenderPipeline("VSM-Pipeline", shadowMapTexture, Constants.Depth);
         renderPipeline.addRenderTask(new CollectShadowData(true))
-                .addRenderTask(new RenderShadowMap("ShadowVSM"));
+                .addRenderTask(new RenderShadowMap(1));
     }
 }

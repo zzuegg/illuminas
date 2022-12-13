@@ -4,6 +4,7 @@ import com.jme3.light.SpotLight;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.Camera;
+import tech.diis.illuminas.jme.lights.ExtendedDirectionalLight;
 import tech.diis.illuminas.jme.lights.ExtendedPointLight;
 
 public class IlluminasShadowUtils {
@@ -48,4 +49,6 @@ public class IlluminasShadowUtils {
         }
 
     }
+
+
 }

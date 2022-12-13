@@ -22,6 +22,8 @@ MaterialDef BlinnPhongLightVolumes {
         Texture2D ShadowMap -LINEAR;
         TextureCubeMap ShadowCubeMap -LINEAR;
         Matrix4 ShadowViewProjectionMatrix;
+        Matrix4Array ProjectionMatrices;
+        Int ProjectionMatricesCount;
 
         Float VolumetricIntensity;
     }
@@ -36,6 +38,9 @@ MaterialDef BlinnPhongLightVolumes {
         Defines{
             LIGHTS : Lights
             LIGHT_MODE : LightMode
+            SHADOW : ShadowMap
+            SHADOWMODE : ShadowMode
+            SHADOWARRAY : ProjectionMatricesCount
         }
     }
 

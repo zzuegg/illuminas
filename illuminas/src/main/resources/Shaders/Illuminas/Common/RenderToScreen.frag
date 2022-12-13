@@ -4,7 +4,7 @@ uniform sampler2D m_CurrentResult;
 out vec4 fragColor;
 
 void main(){
-    float exposure = 1.0f;
+    float exposure = 1f;
     const float gamma = 1;
     vec3 hdrColor = texture(m_CurrentResult, fragTexCoord).rgb;
 

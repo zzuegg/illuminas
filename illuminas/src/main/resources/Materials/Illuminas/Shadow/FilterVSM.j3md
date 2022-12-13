@@ -1,0 +1,21 @@
+MaterialDef GBufferDebugPhong {
+    MaterialParameters{
+        Texture2D CurrentResult -LINEAR;
+        Vector2 Direction;
+        Float Radius : 4.0;
+        Int Samples : 8;
+        Int Horizontal;
+    }
+
+    Technique{
+        VertexShader GLSL150: Shaders/Illuminas/Common/FullScreenQuad.vert
+        FragmentShader GLSL150: Shaders/Illuminas/Shadow/VSMFilter.frag
+        WorldParameters {
+            Resolution
+        }
+        Defines{
+            VSM_SAMPLES = Samples
+            HORIZONTAL = Horizontal
+        }
+    }
+}

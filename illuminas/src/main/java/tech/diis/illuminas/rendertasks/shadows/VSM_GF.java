@@ -11,10 +11,10 @@ public class VSM_GF extends ShadowMode {
     public VSM_GF() {
         shadowMode = 1;
         shadowMapTexture = ShadowModes.VSM.shadowMapTexture;
-        renderPipeline = new RenderPipeline("VMS-GF-Pipeline",ShadowModes.VSM.shadowMapTexture, Constants.Depth);
+        renderPipeline = new RenderPipeline("VMS-GF-Pipeline", ShadowModes.VSM.shadowMapTexture, Constants.Depth);
         renderPipeline.addRenderTask(new CollectShadowData(true))
-                .addRenderTask(new RenderShadowMap("ShadowVSM"))
-                .addRenderTask(new GaussianFilter());
+                .addRenderTask(new RenderShadowMap(1))
+                .addRenderTask(new FilterVSM());
     }
 
 }

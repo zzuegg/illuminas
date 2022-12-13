@@ -1,0 +1,10 @@
+uniform sampler2D m_NormalDepth;
+uniform sampler2D m_AlbedoSpecular;
+uniform sampler2D m_Depth;
+
+
+
+vec3 computeFinalColor(in vec3 lightColor,in vec3 lightDirection,in vec3 worldNormal, in vec3 viewDirection,in vec2 gbufferTexCoords,in vec2 lightingFactors,in float angularFallOff,in float linearFallOff){
+  vec4 albedoSpecular=texture(m_AlbedoSpecular, gbufferTexCoords);
+  return ((lightColor*albedoSpecular.xyz*lightingFactors.x)+(lightColor*albedoSpecular.xyz*lightingFactors.y*albedoSpecular.w))*angularFallOff*linearFallOff;
+}

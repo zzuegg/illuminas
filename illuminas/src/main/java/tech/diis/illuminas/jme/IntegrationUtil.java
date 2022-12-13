@@ -1,6 +1,9 @@
 package tech.diis.illuminas.jme;
 
+import com.jme3.asset.AssetInfo;
+import com.jme3.asset.AssetLoader;
 import com.jme3.asset.AssetManager;
+import com.jme3.asset.plugins.ClasspathLocator;
 import com.jme3.light.DirectionalLight;
 import com.jme3.light.Light;
 import com.jme3.light.PointLight;
@@ -8,6 +11,7 @@ import com.jme3.light.SpotLight;
 import com.jme3.material.MatParam;
 import com.jme3.material.Material;
 import com.jme3.material.RenderState;
+import com.jme3.material.plugins.J3MLoader;
 import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
@@ -17,11 +21,15 @@ import tech.diis.illuminas.jme.lights.ExtendedSpotLight;
 import tech.diis.illuminas.rendertasks.shadows.ShadowMode;
 import tech.diis.illuminas.rendertasks.shadows.ShadowModes;
 
+import java.io.IOException;
+
 public class IntegrationUtil {
     public static Material MetallicRoughtness;
     public static Material BlinnPhong;
 
     public static void initialize(AssetManager assetManager) {
+        assetManager.unregisterLocator("/", ClasspathLocator.class);
+        assetManager.registerLocator("/", IntegrationLoader.class);
         MetallicRoughtness = new Material(assetManager, "Materials/Illuminas/MetallicRoughness.j3md");
         //MetallicRoughtness.setFloat("AlphaDiscardThreshold", 0.5f);
         BlinnPhong = new Material(assetManager, "Materials/Illuminas/BlinnPhong.j3md");
@@ -65,7 +73,6 @@ public class IntegrationUtil {
                 extendedSpotLight.setColor(light.getColor());
                 extendedSpotLight.setPosition(pointLight.getPosition());
                 loadModel.addLight(extendedSpotLight);
-                System.out.println(extendedSpotLight);
             }
         }
         if (loadModel instanceof Geometry geometry) {
@@ -94,9 +101,8 @@ public class IntegrationUtil {
 
         if (destination.getMaterialDef().getMaterialParam(param) != null) {
             destination.setParam(param1.getName(), param1.getVarType(), param1.getValue());
-        } else {
-            System.out.println("Missing param: " + param1);
         }
 
     }
+
 }

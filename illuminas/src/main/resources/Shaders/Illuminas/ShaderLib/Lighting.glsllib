@@ -13,14 +13,18 @@ const float kShininess = 16.0;
 const float kEnergyConservation = (8.0 + kShininess) / (8.0 * kPi);
 
 float computeLinearFallOf(float radius, float distance){
+    //return max(min(1.0-pow(distance/radius, 4.0f), 1.0f), 0.0f);
     float attenuation=max(radius-distance, 0)/radius;
     return pow(clamp(attenuation, 0.0, 1.0), 2.0);
 }
 
 float computeAngularFallOf(float currAngleCos, float angleOuter, float angleInner){
-    float outerAngleCos = cos(angleOuter);
-    float innerAngleCos = cos(angleInner);
-    return clamp((currAngleCos-outerAngleCos)/(innerAngleCos-outerAngleCos), 0.0, 1.0);
+    float lightAngleScale=1.0f/max(0.001f, cos(angleInner)-cos(angleOuter));
+    float lightAngleOffset=-cos(angleOuter)*lightAngleScale;
+    return clamp(currAngleCos*lightAngleScale+lightAngleOffset, 0, 1);
+    //float outerAngleCos = cos(angleOuter);
+    //float innerAngleCos = cos(angleInner);
+    //return clamp((currAngleCos-outerAngleCos)/(innerAngleCos-outerAngleCos), 0.0, 1.0);
 }
 
 

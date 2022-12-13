@@ -5,35 +5,93 @@ uniform sampler2D m_ShadowMap;
 
 #if (SHADOWMODE == 1)
 
+#if defined (SHADOWARRAY)
+uniform mat4[SHADOWARRAY] m_ProjectionMatrices;
+#endif
+
 
 uniform mat4 m_ShadowViewProjectionMatrix;
 
-float linstep(float mi, float ma, float v){
-    return clamp ((v - mi)/(ma - mi), 0, 1);
+float linstep(float minVal, float maxVal, float val) {
+    return clamp((val - minVal) / (maxVal - minVal), 0.0, 1.0);
 }
 
-float ReduceLightBleeding(float p_max, float Amount){
-     return linstep(Amount, 1, p_max);
+float reduceLightBleed(float p_max, float amount) {
+    return linstep(amount, 1.0, p_max);
 }
 
 float chebyshevUpperBound(vec2 moments, float distance){
-		if (distance <= moments.x)
-			return 1.0 ;
+    if (distance <= moments.x)
+    return 1.0;
 
-		float variance = moments.y - (moments.x*moments.x);
-		variance = max(variance,0.00002);
-		float d = distance - moments.x;
-		float p_max = variance / (variance + d*d);
-		return ReduceLightBleeding(p_max,1.0);
+    float variance = moments.y - (moments.x*moments.x);
+    variance = max(variance, 0.0000);
+    float d = distance - moments.x;
+    float p_max = variance / (variance + d*d);
+    return reduceLightBleed(p_max, 0.2f);
 }
 
-float calculateShadow(in vec3 worldPos,in vec3 lightDirection,float distance){
-        vec2 moments;
-        vec4 shadowCoordinates=(m_ShadowViewProjectionMatrix*vec4(worldPos,1.0));
-        shadowCoordinates = vec4(((shadowCoordinates.xyz/shadowCoordinates.w)+1.0)/2.0,shadowCoordinates.w);
-        moments = texture2D(m_ShadowMap,shadowCoordinates.xy).xy;
-        return chebyshevUpperBound(moments,shadowCoordinates.z);
-        //return chebyshevUpperBound(shadowCoordinates.z,moments);
+float vsmThreejs(vec2 moments,float compare){
+    float occlusion = 1.0;
+    vec2 distribution = moments;
+    float hard_shadow = step(compare, distribution.x);// Hard Shadow
+
+    if (hard_shadow != 1.0) {
+        float distance = compare - distribution.x ;
+        float variance = max( 0.00000, distribution.y * distribution.y );
+        float softness_probability = variance / (variance + distance * distance ); // Chebeyshevs inequality
+        softness_probability = clamp( ( softness_probability - 0.3 ) / ( 0.95 - 0.3 ), 0.0, 1.0 ); // 0.3 reduces light bleed
+        occlusion = clamp( max( hard_shadow, softness_probability ), 0.0, 1.0 );
+        return occlusion;
+    }else{
+        return 1;
+    }
+
+}
+
+
+
+float calculateShadow(in vec3 worldPos, in vec3 lightDirection, float distance){
+    vec2 moments;
+    vec4 shadowCoordinates;
+    vec4 shadowCoordinatesTmp;
+    float depth;
+    #if defined(SHADOWARRAY)
+    bool found=false;
+    for (int i=SHADOWARRAY-1;i>=0;i--){
+        shadowCoordinatesTmp=(m_ProjectionMatrices[i]*vec4(worldPos, 1.0));
+        shadowCoordinatesTmp = vec4(((shadowCoordinatesTmp.xyz/shadowCoordinatesTmp.w)+1.0)/2.0, shadowCoordinatesTmp.w);
+        if (found){
+            if (shadowCoordinatesTmp.x>1 || shadowCoordinatesTmp.x<0 || shadowCoordinatesTmp.y>1 || shadowCoordinatesTmp.y<0){
+
+            } else {
+                return 1.0f;
+            }
+        } else {
+            if (shadowCoordinatesTmp.x>1 || shadowCoordinatesTmp.x<0 || shadowCoordinatesTmp.y>1 || shadowCoordinatesTmp.y<0){
+
+            } else {
+                found=true;
+                shadowCoordinates=shadowCoordinatesTmp;
+            }
+        }
+    }
+    if (!found){
+        return 1.0f;
+    }
+    #else
+    shadowCoordinates=(m_ShadowViewProjectionMatrix*vec4(worldPos, 1.0));
+    shadowCoordinates = vec4(((shadowCoordinates.xyz/shadowCoordinates.w)+1.0)/2.0, shadowCoordinates.w);
+
+    if (shadowCoordinates.x>1 || shadowCoordinates.x<0 || shadowCoordinates.y>1 || shadowCoordinates.y<0){
+        return 1.0f;
+    }
+
+    #endif
+    moments = texture2D(m_ShadowMap, shadowCoordinates.xy).xy;
+    shadowCoordinates.z+=0.0003f;
+    return chebyshevUpperBound(moments,shadowCoordinates.z);
+    return min(1.0f,max(0.0f,vsmThreejs(moments,shadowCoordinates.z)));
 }
 #endif
 

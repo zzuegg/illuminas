@@ -14,12 +14,12 @@ import tech.diis.illuminas.jme.NullLightFilter;
 import tech.diis.illuminas.rendertasks.ShadowData;
 
 public class RenderShadowMap extends RenderTask {
-    final String technique;
+    final int mode;
     private final RenderState renderShadowMapRenderState;
 
-    public RenderShadowMap(String technique) {
+    public RenderShadowMap(int mode) {
         super("RenderShadowMap");
-        this.technique = technique;
+        this.mode = mode;
         this.renderShadowMapRenderState = new RenderState();
         this.renderShadowMapRenderState.setBlendMode(RenderState.BlendMode.Off);
         this.renderShadowMapRenderState.setFaceCullMode(RenderState.FaceCullMode.Front);
@@ -37,15 +37,18 @@ public class RenderShadowMap extends RenderTask {
         ShadowData shadowData = ShadowData.ShadowData.get(renderPipeline);
         Constants.OutputTarget.bind(renderPipeline);
         renderPipeline.getRenderManager().setCamera(renderPipeline.getCamera(), false);
-        renderPipeline.getRenderManager().getRenderer().setBackgroundColor(new ColorRGBA(1, 1, 1, 1));
+        renderPipeline.getRenderManager().getRenderer().setBackgroundColor(new ColorRGBA(0, 0, 0, 0));
         renderPipeline.getRenderManager().getRenderer().clearBuffers(true, true, true);
         String forcedTechnique = renderPipeline.getRenderManager().getForcedTechnique();
-        renderPipeline.getRenderManager().setForcedTechnique(technique);
+        renderPipeline.getRenderManager().setForcedTechnique("ShadowVSM");
         RenderState forcedRenderState = renderPipeline.getRenderManager().getForcedRenderState();
         renderPipeline.getRenderManager().setForcedRenderState(renderShadowMapRenderState);
         NullLightFilter.applyTo(renderPipeline.getRenderManager());
 
         GeometryList shadowCasters = shadowData.getShadowCasters();
+        for (Geometry shadowCaster : shadowCasters) {
+            shadowCaster.getMaterial().setInt("ShadowMapMode", mode);
+        }
         renderPipeline.getRenderManager().renderGeometryList(shadowCasters);
 
         NullLightFilter.revert();
